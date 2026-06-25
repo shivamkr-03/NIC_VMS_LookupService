@@ -1,19 +1,25 @@
-server:
-  port: 8082
-
 spring:
   application:
-    name: lookup-service
+    name: vms
 
   datasource:
-    url: jdbc:mysql://localhost:3306/sugam
+    url: jdbc:mysql://localhost:3306/sugam?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Kolkata
     username: root
-    password: root123
+    password:
+    driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:
     hibernate:
-      ddl-auto: none
+      ddl-auto: validate
     show-sql: true
     properties:
       hibernate:
         format_sql: true
+
+server:
+  port: 8082
+
+logging:
+  level:
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
