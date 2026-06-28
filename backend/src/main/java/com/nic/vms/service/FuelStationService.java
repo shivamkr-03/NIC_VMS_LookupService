@@ -1,13 +1,22 @@
 package com.nic.vms.service;
 
+import com.nic.vms.Constants.StatusConstants;
 import com.nic.vms.dto.request.FuelStationSearchRequest;
-import com.nic.vms.dto.response.FuelStationSearchResponse;
+import com.nic.vms.dto.response.FuelStationDashboardResponse;
+import com.nic.vms.dto.response.FuelTransactionResponse;
+import com.nic.vms.entity.FinalPaymentFuelStation;
 import com.nic.vms.entity.FuelStation;
+import com.nic.vms.repository.FinalBilledFuelSlipFuelStationRepository;
+import com.nic.vms.repository.FinalPaymentFuelStationRepository;
 import com.nic.vms.repository.FuelStationRepository;
 import com.nic.vms.service.interfaces.IFuelStationService;
+import com.nic.vms.utility.FuelStationUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import com.nic.vms.entity.FinalBilledFuelSlipFuelStation;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -16,50 +25,74 @@ public class FuelStationService implements IFuelStationService {
     @Autowired
     private FuelStationRepository fuelStationRepository;
 
-    @Override
-    public List<FuelStation> getFuelStations(
-            Integer eventId,
-            Integer districtId) {
+    @Autowired
+    private FinalPaymentFuelStationRepository finalPaymentFuelStationRepository;
 
-        return fuelStationRepository
-                .findByEventIdAndDistrictIdAndActive(
-                        eventId,
-                        districtId,
-                        "Y"
-                );
+    @Autowired
+    private FinalBilledFuelSlipFuelStationRepository finalBilledFuelSlipFuelStationRepository;
+
+    @Override
+    public List<FuelStation> getFuelStations(Integer eventId,
+                                             Integer districtId) {
+
+        return fuelStationRepository.findByEventIdAndDistrictIdAndActive(
+                eventId,
+                districtId,
+                "Y"
+        );
     }
 
     @Override
-    public FuelStationSearchResponse searchFuelStation(
+    public FuelStationDashboardResponse searchFuelStation(
             FuelStationSearchRequest request) {
 
-        FuelStation fuelStation =
-                fuelStationRepository
-                        .findByIdAndEventIdAndDistrictId(
+        // Verify Fuel Station
+        FuelStation fuelStation = fuelStationRepository
+                .findByIdAndEventIdAndDistrictId(
+                        request.getFuelStationId(),
+                        request.getEventId(),
+                        request.getDistrictId()
+                )
+                .orElseThrow(() ->
+                        new RuntimeException("Invalid Fuel Station Details"));
+
+        // Verify Mobile Number
+        if (!fuelStation.getMobile().equals(request.getMobileNumber())) {
+            throw new RuntimeException("Invalid Mobile Number");
+        }
+
+        // Fetch Payment Summary
+        List<FinalPaymentFuelStation> paymentList =
+                finalPaymentFuelStationRepository
+                        .findByFuelStationIdAndEventIdAndDistrictId(
                                 request.getFuelStationId(),
                                 request.getEventId(),
                                 request.getDistrictId()
-                        )
-                        .orElseThrow(() ->
-                                new RuntimeException("Invalid details"));
+                        );
 
-        if (!fuelStation.getMobile()
-                .equals(request.getMobileNumber())) {
-
-            throw new RuntimeException("Invalid details");
+        if (paymentList.isEmpty()) {
+            throw new RuntimeException("No payment details found.");
         }
 
-        FuelStationSearchResponse response =
-                new FuelStationSearchResponse();
+        FuelStationDashboardResponse response =
+                FuelStationUtil.buildDashboardResponse(
+                        fuelStation,
+                        paymentList
+                );
 
-        response.setStationName(
-                fuelStation.getName());
-
-        response.setOwnerName(
-                fuelStation.getOwnerName());
-
-        response.setMobileNumber(
-                fuelStation.getMobile());
+        // Fetch Fuel Slips
+        List<FinalBilledFuelSlipFuelStation> fuelSlipList =
+                finalBilledFuelSlipFuelStationRepository
+                        .findByFuelStationIdAndEventIdAndDistrictIdAndStatus(
+                                request.getFuelStationId(),
+                                request.getEventId(),
+                                request.getDistrictId(),
+                                StatusConstants.ACTIVE
+                        );
+        
+        // Build Transactions using Utility
+        response.setTransactions(
+                FuelStationUtil.buildTransactions(fuelSlipList));
 
         return response;
     }

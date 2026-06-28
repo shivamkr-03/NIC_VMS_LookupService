@@ -1,61 +1,40 @@
-package gov.jharkhand.lookup.entity;
+package com.nic.vms.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import jakarta.persistence.*;
+import lombok.*;
 
+@Entity
+@Table(name = "fuelstations")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-@Entity
-@Table(name = "fuelstations")
 public class FuelStation {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Integer id;
 
-    @Column(name = "state_id", nullable = false)
+    @Column(name = "state_id")
     private Integer stateId;
 
-    @Column(name = "district_id", nullable = false)
+    @Column(name = "district_id")
     private Integer districtId;
 
-    @Column(name = "event_id", nullable = false)
+    @Column(name = "event_id")
     private Integer eventId;
 
-    @Column(name = "company_id", nullable = false, length = 1)
+    @Column(name = "company_id")
     private String companyId;
 
-    @Column(nullable = false, length = 100)
+    @Column(name = "name")
     private String name;
 
-    @Column(nullable = false, length = 100)
-    private String ownername;
+    @Column(name = "ownername")
+    private String ownerName;
 
-    @Column(nullable = false, length = 10)
+    @Column(name = "mobile")
     private String mobile;
 
-    @Column(name = "contact_person", length = 100)
-    private String contactPerson;
-
-    @Column(name = "contact_person_mobile", length = 10)
-    private String contactPersonMobile;
-
-    @Column(nullable = false, length = 1)
+    @Column(name = "active")
     private String active;
-
-    @Column(name = "payment_flag", length = 1)
-    private String paymentFlag;
-
-    @Column(name = "admin_type", length = 1)
-    private String adminType;
 }

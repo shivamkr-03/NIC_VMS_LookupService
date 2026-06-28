@@ -1,77 +1,38 @@
-package gov.jharkhand.lookup.entity;
+package com.nic.vms.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import java.time.LocalDateTime;
 
+@Entity
+@Table(name = "fuelslips")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-@Entity
-@Table(name = "fuelslips")
 public class FuelSlip {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "cuopon_no", nullable = false, unique = true, length = 25)
-    private String couponNo;
+    @Column(name = "fuelstation_id")
+    private Integer fuelStationId;
 
-    @Column(name = "state_id", nullable = false)
-    private Integer stateId;
-
-    @Column(name = "district_id", nullable = false)
-    private Integer districtId;
-
-    @Column(name = "event_id", nullable = false)
-    private Integer eventId;
-
-    @Column(name = "issuedate", nullable = false)
-    private LocalDateTime issueDate;
-
-    @Column(name = "vehicle_id", nullable = false)
-    private Long vehicleId;
-
-    @Column(name = "registration_no", nullable = false, length = 10)
-    private String registrationNo;
-
-    @Column(nullable = false)
+    @Column(name = "qty")
     private Double qty;
 
-    @Column(nullable = false, length = 1)
+    @Column(name = "status")
     private String status;
 
-    @Column(name = "fuelstation_id", nullable = false)
-    private Integer fuelstationId;
+    @Column(name = "fueltype_id")
+    private String fuelTypeId;
 
-    @Column(name = "valid_upto", nullable = false)
-    private LocalDateTime validUpto;
+    @Column(name = "event_id")
+    private Integer eventId;
 
-    @Column(name = "fueltype_id", nullable = false, length = 1)
-    private String fueltypeId;
-
-    @Column(name = "reporting_place_id", nullable = false)
-    private Integer reportingPlaceId;
-
-    @Column(length = 200)
-    private String reason;
-
-    @Column(name = "o_fuel_rate")
-    private Double oFuelRate;
-
-    @Column(name = "o_amount")
-    private Double oAmount;
-
-    @Column(name = "admin_type", length = 1)
-    private String adminType;
+    @Column(name = "district_id")
+    private Integer districtId;
 }

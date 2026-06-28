@@ -16,7 +16,6 @@ public class DistrictService implements IDistrictService {
 
     @Override
     public List<District> getAllDistricts() {
-
         return districtRepository.findAll();
     }
 }
