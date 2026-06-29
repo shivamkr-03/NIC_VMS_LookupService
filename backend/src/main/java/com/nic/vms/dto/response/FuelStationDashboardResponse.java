@@ -2,7 +2,6 @@ package com.nic.vms.dto.response;
 
 import lombok.Data;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 @Data
@@ -23,6 +22,12 @@ public class FuelStationDashboardResponse {
     private Double grossBill;
     private Double advanceReceived;
     private Double netReceivable;
+
+    private CouponSummaryDTO couponSummary;
+
+    private BankDetailsDTO bankDetails;
+
+    private PaymentDetailsDTO paymentDetails;
 
     private List<FuelTransactionResponse> transactions;
 }

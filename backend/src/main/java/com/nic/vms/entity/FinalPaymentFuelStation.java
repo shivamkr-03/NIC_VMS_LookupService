@@ -1,11 +1,14 @@
 package com.nic.vms.entity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.math.BigDecimal;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "final_payment_fuelstation")
@@ -50,6 +53,24 @@ public class FinalPaymentFuelStation {
     @Column(name = "final_billed_amount")
     private Double finalBilledAmount;
 
+    @Column(name = "bank_name")
+    private String bankName;
+
+    @Column(name = "branch_name")
+    private String branchName;
+
+    @Column(name = "account_holder_name")
+    private String accountHolderName;
+
+    @Column(name = "account_no")
+    private String accountNo;
+
+    @Column(name = "ifsc")
+    private String ifsc;
+
     @Column(name = "utr_no")
     private String utrNo;
+
+    @Column(name = "utr_dt")
+    private LocalDate utrDate;
 }

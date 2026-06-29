@@ -1,7 +1,9 @@
 package com.nic.vms.utility;
 
+import com.nic.vms.dto.response.BankDetailsDTO;
 import com.nic.vms.dto.response.FuelStationDashboardResponse;
 import com.nic.vms.dto.response.FuelTransactionResponse;
+import com.nic.vms.dto.response.PaymentDetailsDTO;
 import com.nic.vms.entity.FinalBilledFuelSlipFuelStation;
 import com.nic.vms.entity.FinalPaymentFuelStation;
 import com.nic.vms.entity.FuelStation;
@@ -47,6 +49,26 @@ public class FuelStationUtil {
 
         double netReceivable = grossBill - advanceReceived;
 
+        // Prepare Bank Details
+        BankDetailsDTO bankDetails = new BankDetailsDTO();
+
+// Prepare Payment Details
+        PaymentDetailsDTO paymentDetails = new PaymentDetailsDTO();
+
+        if (!paymentList.isEmpty()) {
+
+            FinalPaymentFuelStation payment = paymentList.get(0);
+
+            bankDetails.setBankName(payment.getBankName());
+            bankDetails.setBranchName(payment.getBranchName());
+            bankDetails.setAccountHolderName(
+                    payment.getAccountHolderName());
+            bankDetails.setIfsc(payment.getIfsc());
+
+            paymentDetails.setUtrNumber(payment.getUtrNo());
+            paymentDetails.setUtrDate(payment.getUtrDate());
+        }
+
         // Prepare Response
         FuelStationDashboardResponse response = new FuelStationDashboardResponse();
 
@@ -64,6 +86,10 @@ public class FuelStationUtil {
         response.setGrossBill(grossBill);
         response.setAdvanceReceived(advanceReceived);
         response.setNetReceivable(netReceivable);
+
+        response.setBankDetails(bankDetails);
+
+        response.setPaymentDetails(paymentDetails);
 
         return response;
     }

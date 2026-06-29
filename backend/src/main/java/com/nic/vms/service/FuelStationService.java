@@ -2,6 +2,7 @@ package com.nic.vms.service;
 
 import com.nic.vms.Constants.StatusConstants;
 import com.nic.vms.dto.request.FuelStationSearchRequest;
+import com.nic.vms.dto.response.CouponSummaryDTO;
 import com.nic.vms.dto.response.FuelStationDashboardResponse;
 import com.nic.vms.dto.response.FuelTransactionResponse;
 import com.nic.vms.entity.FinalPaymentFuelStation;
@@ -30,6 +31,7 @@ public class FuelStationService implements IFuelStationService {
 
     @Autowired
     private FinalBilledFuelSlipFuelStationRepository finalBilledFuelSlipFuelStationRepository;
+
 
     @Override
     public List<FuelStation> getFuelStations(Integer eventId,
@@ -93,6 +95,48 @@ public class FuelStationService implements IFuelStationService {
         // Build Transactions using Utility
         response.setTransactions(
                 FuelStationUtil.buildTransactions(fuelSlipList));
+
+        CouponSummaryDTO summary = new CouponSummaryDTO();
+
+        long active = finalBilledFuelSlipFuelStationRepository
+                .countByFuelStationAndStatus(
+                        request.getFuelStationId(),
+                        request.getEventId(),
+                        request.getDistrictId(),
+                        "A"
+                );
+
+        long used = finalBilledFuelSlipFuelStationRepository
+                .countByFuelStationAndStatus(
+                        request.getFuelStationId(),
+                        request.getEventId(),
+                        request.getDistrictId(),
+                        "U"
+                );
+
+        long cancelled = finalBilledFuelSlipFuelStationRepository
+                .countByFuelStationAndStatus(
+                        request.getFuelStationId(),
+                        request.getEventId(),
+                        request.getDistrictId(),
+                        "C"
+                );
+
+        long expired = finalBilledFuelSlipFuelStationRepository
+                .countByFuelStationAndStatus(
+                        request.getFuelStationId(),
+                        request.getEventId(),
+                        request.getDistrictId(),
+                        "E"
+                );
+
+        summary.setActiveCoupons(active);
+        summary.setUsedCoupons(used);
+        summary.setCancelledCoupons(cancelled);
+        summary.setExpiredCoupons(expired);
+        summary.setTotalIssued(active + used + cancelled + expired);
+
+        response.setCouponSummary(summary);
 
         return response;
     }
