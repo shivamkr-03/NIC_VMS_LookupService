@@ -1,14 +1,15 @@
 server:
-  port: 8082
+  port: ${PORT:8082}
 
 spring:
   application:
     name: lookup-service
 
   datasource:
-    url: jdbc:mysql://localhost:3306/sugam
-    username: root
-    password: root123
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ${MYSQL_URL:jdbc:mysql://localhost:3306/sugam?connectionTimeZone=UTC}
+    username: ${MYSQL_USER:root}
+    password: ${MYSQL_PASSWORD:root123}
 
   jpa:
     hibernate:

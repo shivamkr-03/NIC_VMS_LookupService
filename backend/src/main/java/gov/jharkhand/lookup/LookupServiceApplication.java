@@ -1,13 +1,13 @@
-package com.nic.vms;
+package gov.jharkhand.lookup;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class VmsApplication {
+public class LookupServiceApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(VmsApplication.class, args);
+		SpringApplication.run(LookupServiceApplication.class, args);
 	}
 
 }
