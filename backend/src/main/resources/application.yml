@@ -1,16 +1,19 @@
+server:
+  port: ${PORT:8082}
+
 spring:
   application:
-    name: vms
+    name: lookup-service
 
   datasource:
-    url: jdbc:mysql://localhost:3306/sugam?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Kolkata
-    username: root
-    password:
     driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ${MYSQL_URL:jdbc:mysql://localhost:3306/sugam?connectionTimeZone=UTC}
+    username: ${MYSQL_USER:root}
+    password: ${MYSQL_PASSWORD:root123}
 
   jpa:
     hibernate:
-      ddl-auto: validate
+      ddl-auto: none
     show-sql: true
     properties:
       hibernate:
